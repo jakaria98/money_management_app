@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { login } from "../store/actions/authAction";
 import { connect } from "react-redux";
 class Login extends React.Component {
@@ -27,7 +27,8 @@ class Login extends React.Component {
   submitHandler = (event) => {
     event.preventDefault();
     let { email, password } = this.state;
-    this.props.login({ email, password }, this.props.history);
+ 
+    this.props.login({ email, password },this.props.history);
   };
 
   render() {

@@ -12,7 +12,7 @@ export const register = (user, history) => (dispatch) => {
           error: {},
         },
       });
-      console.log(res); 
+      console.log(res);
       history.push("/login");
     })
     .catch((error) => {
@@ -52,7 +52,7 @@ export const login = (user, history) => (dispatch) => {
 
 export const logout = (history) => (dispatch) => {
   localStorage.removeItem("auth_token");
-  history.push("/login");
+  this.props.history.push("/login");
   return {
     type: Types.SET_USER,
     payload: {

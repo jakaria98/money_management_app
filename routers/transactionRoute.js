@@ -6,9 +6,9 @@ const {
   getSingleTransaction,
   remove,
 } = require("../controllers/transactionController");
-
-router.get("/", getAll);
-router.post("/", create);
+const authenticate = require('../authenticate')
+router.get("/", authenticate, getAll);
+router.post("/", authenticate, create);
 router.get("/:transactionId", getSingleTransaction);
 router.put("/:transactionId", update);
 router.delete("/:transactionId", remove);

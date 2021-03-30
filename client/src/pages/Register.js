@@ -29,6 +29,7 @@ class Register extends React.Component {
   submitHandler = (event) => {
     event.preventDefault();
     let { name, email, password, confirmPassword } = this.state;
+
     this.props.register(
       { name, email, password, confirmPassword },
       this.props.history
