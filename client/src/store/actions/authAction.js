@@ -52,7 +52,7 @@ export const login = (user, history) => (dispatch) => {
 
 export const logout = (history) => (dispatch) => {
   localStorage.removeItem("auth_token");
-  this.props.history.push("/login");
+  history.push("/login");
   return {
     type: Types.SET_USER,
     payload: {

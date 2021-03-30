@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../store/actions/authAction";
 class Home extends React.Component {
@@ -14,7 +15,9 @@ class Home extends React.Component {
             Logout
           </button>
         ) : (
-          <button className="btn btn-success">Login</button>
+          <Link to="/login">
+            <button className="btn btn-success">Login</button>
+          </Link>
         )}
       </div>
     );

@@ -7,39 +7,42 @@ module.exports = {
     let { amount, note, type } = req.body;
     let userId = req.user._id;
 
-    let transaction = new transaction({ amount, note, type, author: userId });
+    let transaction = new Transaction({
+      amount,
+      note,
+      type,
+      author: userId,
+    });
     transaction
       .save()
       .then((trans) => {
         let updatedUser = { ...req.user };
         if (type === "income") {
-          updatedUser.balance = updatedUser.balance + amount;
-          updatedUser.income += income;
+          updatedUser.balance += amount;
+          updatedUser.income += amount;
         } else if (type === "expense") {
           updatedUser.balance -= amount;
           updatedUser.expense += amount;
         }
         updatedUser.transactions.unshift(trans._id);
-        User.findOneAndUpdate(
+        User.findByIdAndUpdate(
           updatedUser._id,
           { $set: updatedUser },
           { new: true }
         );
         res.status(201).json({
-          message: "transaction created successfully",
-          ...trans._doc,
-          user: result,
+          message: "transaction done",
+          ...trans,
         });
       })
       .catch((error) => serverError(res, error));
   },
   getAll(req, res) {
-    let { _id } = req.user;
-    Transaction.find({ author: _id })
+    Transaction.find()
       .then((transactions) => {
         if (transactions.length === 0) {
           res.status(200).json({
-            message: "No Transaction Found",
+            message: "no transaction found",
           });
         } else {
           res.status(200).json(transactions);
@@ -53,17 +56,17 @@ module.exports = {
       .then((transaction) => {
         if (!transaction) {
           res.status(200).json({
-            message: "No Transaction Found",
+            message: "no transaction found",
           });
         } else {
           res.status(200).json(transaction);
         }
       })
-      .catch((error) => serverError(res, error));
+      .catch((error) => serverError(res.error));
   },
   update(req, res) {
     let { transactionId } = req.params;
-    Transaction.findOneAndUpdate(
+    Transaction.findByIdAndUpdate(
       { _id: transactionId },
       { $set: req.body },
       { new: true }
@@ -71,18 +74,18 @@ module.exports = {
       .then((result) => {
         res.status(200).json({
           message: "Updated Successfully",
-          transaction: result,
+          ...result,
         });
       })
       .catch((error) => serverError(res, error));
   },
   remove(req, res) {
     let { transactionId } = req.params;
-    Transaction.findOneAndDelete({ _id: transactionId })
+    Transaction.findByIdAndDelete({ _id: transactionId })
       .then((result) => {
         res.status(200).json({
           message: "Deleted Successfully",
-          ...result._doc,
+          ...result,
         });
       })
       .catch((error) => serverError(res, error));
