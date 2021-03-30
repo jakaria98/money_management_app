@@ -3,7 +3,7 @@ const { serverError } = require("../util/error");
 const User = require("../model/User");
 
 module.exports = {
-  create(req, res) {
+  create(req, res, next) {
     let { amount, note, type } = req.body;
     let userId = req.user._id;
 
@@ -13,27 +13,33 @@ module.exports = {
       type,
       author: userId,
     });
+
     transaction
       .save()
       .then((trans) => {
-        let updatedUser = { ...req.user };
+        let updatedUser = { ...req.user._doc };
         if (type === "income") {
-          updatedUser.balance += amount;
-          updatedUser.income += amount;
+          updatedUser.balance = updatedUser.balance + amount;
+          updatedUser.income = updatedUser.income + amount;
         } else if (type === "expense") {
-          updatedUser.balance -= amount;
-          updatedUser.expense += amount;
+          updatedUser.balance = updatedUser.balance - amount;
+          updatedUser.expense = updatedUser.expense + amount;
         }
         updatedUser.transactions.unshift(trans._id);
+
         User.findByIdAndUpdate(
           updatedUser._id,
           { $set: updatedUser },
           { new: true }
-        );
-        res.status(201).json({
-          message: "transaction done",
-          ...trans,
-        });
+        )
+          .then((result) => {
+            res.status(201).json({
+              message: "Transaction Created Successfully",
+              ...trans._doc,
+              user: result,
+            });
+          })
+          .catch((error) => serverError(res, error));
       })
       .catch((error) => serverError(res, error));
   },

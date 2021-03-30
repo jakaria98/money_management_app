@@ -32,7 +32,7 @@ module.exports = {
               amount: user.amount,
               income: user.income,
               expense: user.expense,
-              transactions: user.transactions
+              transactions: user.transactions,
             },
             "SECRET",
             { expiresIn: "2h" }
@@ -71,12 +71,17 @@ module.exports = {
               name,
               email,
               password: hash,
+              balance: 0,
+              expense: 0,
+              income: 0,
+              transactions: [],
             });
             user
               .save()
               .then((user) => {
                 res.status(201).json({
                   message: "user saved",
+                  user,
                 });
               })
               .catch((error) => {
@@ -88,5 +93,12 @@ module.exports = {
           serverError(res, error);
         });
     }
+  },
+  allUser(req, res) {
+    User.find()
+      .then((users) => {
+        res.status(200).json(users);
+      })
+      .catch((error) => serverError(res, error));
   },
 };
