@@ -35,7 +35,7 @@ module.exports = {
               transactions: user.transactions,
             },
             "SECRET",
-            { expiresIn: "2h" }
+            { expiresIn: 60 * 60 * 2 }
           );
           res.status(200).json({
             message: "Login Successful",
