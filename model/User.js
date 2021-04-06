@@ -15,9 +15,18 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
-  balance: Number,
-  income: Number,
-  expense: Number,
+  balance: {
+    type: Number,
+    required: true,
+  },
+  income: {
+    type: Number,
+    required: true,
+  },
+  expense: {
+    type: Number,
+    required: true,
+  },
   transactions: {
     type: [
       {

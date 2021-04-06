@@ -44,8 +44,8 @@ module.exports = {
       .catch((error) => serverError(res, error));
   },
   getAll(req, res) {
-    let {_id} = req.user
-    Transaction.find({author: _id})
+    let { _id } = req.user;
+    Transaction.find({ author: _id })
       .then((transactions) => {
         if (transactions.length === 0) {
           res.status(200).json({
@@ -73,7 +73,7 @@ module.exports = {
   },
   update(req, res) {
     let { transactionId } = req.params;
-    Transaction.findByIdAndUpdate(
+    Transaction.findOneAndUpdate(
       { _id: transactionId },
       { $set: req.body },
       { new: true }
@@ -81,18 +81,18 @@ module.exports = {
       .then((result) => {
         res.status(200).json({
           message: "Updated Successfully",
-          ...result,
+          transaction: result,
         });
       })
       .catch((error) => serverError(res, error));
   },
   remove(req, res) {
     let { transactionId } = req.params;
-    Transaction.findByIdAndDelete({ _id: transactionId })
+    Transaction.findOneAndDelete({ _id: transactionId })
       .then((result) => {
         res.status(200).json({
           message: "Deleted Successfully",
-          ...result,
+          ...result._doc,
         });
       })
       .catch((error) => serverError(res, error));

@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-import { addNewTransaction } from "../../store/actions/transactionActions";
+import { updateTransaction } from "../../store/actions/transactionActions";
 
 const customStyles = {
   content: {
@@ -15,12 +15,18 @@ const customStyles = {
   },
 };
 
-class CreateTransaction extends React.Component {
+class UpdateTransaction extends React.Component {
   state = {
     amount: 0,
-    type: "",
     note: "",
   };
+
+  componentDidMount() {
+    this.setState({
+      amount: this.props.transaction.amount,
+      note: this.props.transaction.note,
+    });
+  }
 
   changeHandler = (event) => {
     this.setState({
@@ -30,12 +36,8 @@ class CreateTransaction extends React.Component {
 
   submitHandler = (event) => {
     event.preventDefault();
-    this.props.addNewTransaction(this.state);
-    this.setState({
-      amount: 0,
-      type: "",
-      note: "",
-    });
+    this.props.updateTransaction(this.props.transaction._id, this.state);
+    this.props.close();
   };
 
   render() {
@@ -45,9 +47,9 @@ class CreateTransaction extends React.Component {
         isOpen={this.props.isOpen}
         onRequestClose={this.props.close}
         style={customStyles}
-        contentLabel="Create A New Transaction"
+        contentLabel="Update Transaction"
       >
-        <h2>Create A New Transaction</h2>
+        <h2>Update Transaction</h2>
         <form onSubmit={this.submitHandler}>
           <div className="form-group">
             <label htmlFor="amount"> Amount: </label>
@@ -61,22 +63,10 @@ class CreateTransaction extends React.Component {
               onChange={this.changeHandler}
             />
           </div>
-          <div className="form-group m-1">
-            <label htmlFor="type"> Type: </label>
-            <select
-              className="form-control"
-              onChange={this.changeHandler}
-              name="type"
-            >
-              <option> Select A Type </option>
-              <option value="expense"> Expense </option>
-              <option value="income">Income</option>
-            </select>
-          </div>
-          <div className="form-group m-1">
-            <label htmlFor="note"> Note: </label>
+          <div className="form-group">
+            <label htmlFor="note"> Amount: </label>
             <textarea
-              className="form-control "
+              className="form-control"
               placeholder="Enter a Note"
               name="note"
               id="note"
@@ -84,11 +74,11 @@ class CreateTransaction extends React.Component {
               onChange={this.changeHandler}
             />
           </div>
-          <button className="btn btn-primary m-1">Submit</button>
+          <button className="btn btn-primary">Submit</button>
         </form>
       </Modal>
     );
   }
 }
 
-export default connect(null, { addNewTransaction })(CreateTransaction);
+export default connect(null, { updateTransaction })(UpdateTransaction);
