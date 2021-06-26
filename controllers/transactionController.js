@@ -1,4 +1,4 @@
-const Transaction = require("../model/Transaction");
+ const Transaction = require("../model/Transaction");
 const { serverError } = require("../util/error");
 const User = require("../model/User");
 
@@ -6,7 +6,7 @@ module.exports = {
   create(req, res, next) {
     let { amount, note, type } = req.body;
     let userId = req.user._id;
-
+    console.log(req.user)
     let transaction = new Transaction({
       amount,
       note,

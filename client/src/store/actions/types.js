@@ -1,4 +1,4 @@
-export const SET_USER = "SET-USER";
+export const SET_USER = "SET_USER";
 export const USER_ERROR = "USER_ERROR";
 export const LOAD_TRANSACTIONS = "LOAD_TRANSACTIONS";
 export const CREATE_TRANSACTION = "CREATE_TRANSACTION";
